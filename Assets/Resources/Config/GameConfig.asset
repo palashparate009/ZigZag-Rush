@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c9fcd06255e4c5eaf7883ba19c1b387, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: ZigZag.Config::GameConfigAsset
+  version: 5
+  network: {fileID: 11400000, guid: 2e9eb5d90c4154847a3206a760591514, type: 2}
+  services: {fileID: 11400000, guid: 40c8d9e35de1aba4cb4ea5a76de38181, type: 2}
+  ads: {fileID: 11400000, guid: fbb9adafc7878b54b8c8a5564379c5ff, type: 2}
+  cloud: {fileID: 11400000, guid: 1086949c087eacc488c2ece1d705e326, type: 2}
+  economy: {fileID: 11400000, guid: bfc3d58f06514d646a32f1ce2cd183c1, type: 2}
+  gameplay: {fileID: 11400000, guid: c4c5315edb699144e907177be7c4f955, type: 2}
+  ghost: {fileID: 11400000, guid: 8fc1393f56444a05afce59ef3ee854c5, type: 2}
+  background: {fileID: 11400000, guid: 35e95bb5cde14f9b9059d29214ff9ebf, type: 2}
+  challenges: {fileID: 11400000, guid: fbe6ae2b3dd6d6e42a2c489901b672ac, type: 2}

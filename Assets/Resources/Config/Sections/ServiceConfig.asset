@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa46726c62642f3bc7a2f7919761bdf, type: 3}
+  m_Name: ServiceConfig
+  m_EditorClassIdentifier: ZigZag.Config::ServiceConfigAsset
+  settings:
+    packageName: com.zigzagstudio.zigzagrush
+    playGamesApplicationId: 636986009425
+    playGamesWebClientId: 636986009425-q7600ertmrmo47aihohfajj57ojephut.apps.googleusercontent.com
+    mainLeaderboardId: CgkI0c7M-sQSEAIQBQ
+    dailyLeaderboardId: CgkI0c7M-sQSEAIQBg
+    privacyPolicyUrl: https://palashparate009.github.io/zigzag-rush-privacy/

@@ -1,0 +1,10 @@
+<!-- Native Android services used through GameHealthMonitor and FirebaseRemoteConfigBridge. -->
+<dependencies>
+  <androidPackages>
+    <androidPackage spec="com.google.firebase:firebase-crashlytics:20.1.1" />
+    <androidPackage spec="com.google.firebase:firebase-crashlytics-ndk:20.1.1" />
+    <androidPackage spec="com.google.firebase:firebase-perf:22.0.6" />
+    <androidPackage spec="com.google.firebase:firebase-config:23.1.0" />
+    <androidPackage spec="com.google.android.ump:user-messaging-platform:4.0.0" />
+  </androidPackages>
+</dependencies>

@@ -1,0 +1,599 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c95ba957f36341f4a96c50ccc24b3ac0, type: 3}
+  m_Name: CarCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::CarCatalog
+  sourceSignature: f07600d026f3558369e134dac50435dd
+  cars:
+  - id: muscle cars/muscle type c color 2
+    displayName: Muscle Type C - Color 2
+    familyName: Muscle Type C
+    variantName: Color 2
+    prefab: {fileID: 1968583919225113155, guid: a39a923810de08f4c8bbb4d98ed40977, type: 3}
+    gemCost: 0
+    startsUnlocked: 1
+    rewardedAdUnlock: 0
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: samurai cars/samurai_blue_a
+    displayName: Samurai A - Blue
+    familyName: Samurai A
+    variantName: Blue
+    prefab: {fileID: 3225874551983908691, guid: 2473c0ed16869b644a97c004d8b04e32, type: 3}
+    gemCost: 0
+    startsUnlocked: 1
+    rewardedAdUnlock: 0
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: taxi sedan cars/taxi sedan
+    displayName: Taxi Sedan
+    familyName: Taxi Sedan
+    variantName: Standard
+    prefab: {fileID: 6399181887029170125, guid: 09f37f147baebfc40a9de11d291e1a05, type: 3}
+    gemCost: 0
+    startsUnlocked: 1
+    rewardedAdUnlock: 0
+    speedMultiplier: 0.98
+    perfectWindowMultiplier: 1.12
+    drivingStyle: 'CRUISER: steady and easy to control'
+  - id: sports type cars/sports type b color 3
+    displayName: Sports Type B - Color 3
+    familyName: Sports Type B
+    variantName: Color 3
+    prefab: {fileID: 4329876011565719924, guid: 6ee1a1c7de51fb9418968d0c52c65c07, type: 3}
+    gemCost: 0
+    startsUnlocked: 1
+    rewardedAdUnlock: 0
+    speedMultiplier: 1.08
+    perfectWindowMultiplier: 0.9
+    drivingStyle: 'SPRINTER: faster, with more precise turns'
+  - id: cop sedan cars/cop muscle
+    displayName: Cop Muscle
+    familyName: Cop Muscle
+    variantName: Standard
+    prefab: {fileID: 3110377832017560899, guid: bc2e0dcdeaea1034aa7db84bb15cd429, type: 3}
+    gemCost: 350
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: cop sedan cars/cop sedan
+    displayName: Cop Sedan
+    familyName: Cop Sedan
+    variantName: Standard
+    prefab: {fileID: 6871175417294970825, guid: 9489ac6be26107b45a05f75c97c282dd, type: 3}
+    gemCost: 350
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.06
+    perfectWindowMultiplier: 0.96
+    drivingStyle: 'PURSUIT: fast and responsive'
+  - id: muscle cars/muscle type a color 1
+    displayName: Muscle Type A - Color 1
+    familyName: Muscle Type A
+    variantName: Color 1
+    prefab: {fileID: 1315449349599342219, guid: f1bc51f5710dbae4b8a49a132d14a80b, type: 3}
+    gemCost: 100
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: muscle cars/muscle type a color 2
+    displayName: Muscle Type A - Color 2
+    familyName: Muscle Type A
+    variantName: Color 2
+    prefab: {fileID: 1467965766658521988, guid: 91d758e52905aeb439190e71c9350754, type: 3}
+    gemCost: 175
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: muscle cars/muscle type a color 3
+    displayName: Muscle Type A - Color 3
+    familyName: Muscle Type A
+    variantName: Color 3
+    prefab: {fileID: 469753025071777984, guid: 2f9add16409fd854e81cf06cd45c3c2e, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: muscle cars/muscle type b color 1
+    displayName: Muscle Type B - Color 1
+    familyName: Muscle Type B
+    variantName: Color 1
+    prefab: {fileID: 4740755921378540612, guid: ee952468835838c47add50357110e5a1, type: 3}
+    gemCost: 100
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: muscle cars/muscle type b color 2
+    displayName: Muscle Type B - Color 2
+    familyName: Muscle Type B
+    variantName: Color 2
+    prefab: {fileID: 5023132480925528600, guid: ceb813c90179cf54fa8cda204f553901, type: 3}
+    gemCost: 175
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: muscle cars/muscle type b color 3
+    displayName: Muscle Type B - Color 3
+    familyName: Muscle Type B
+    variantName: Color 3
+    prefab: {fileID: 5121114108073401161, guid: 593ff7bc6c0a9524691bc58588e28700, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: muscle cars/muscle type c color 1
+    displayName: Muscle Type C - Color 1
+    familyName: Muscle Type C
+    variantName: Color 1
+    prefab: {fileID: 99905425978284414, guid: ff928ea91ac130b4383e8bb2ebcd2119, type: 3}
+    gemCost: 100
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: muscle cars/muscle type c color 3
+    displayName: Muscle Type C - Color 3
+    familyName: Muscle Type C
+    variantName: Color 3
+    prefab: {fileID: 5982932729981868085, guid: c77618c9cf48814409825e0c6fd51aa6, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'
+  - id: pickup truck cars/pickup color 1
+    displayName: Pickup - Color 1
+    familyName: Pickup
+    variantName: Color 1
+    prefab: {fileID: 4390761580322975483, guid: 0fe616b0f3a91c345899827fea84c05e, type: 3}
+    gemCost: 100
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.94
+    perfectWindowMultiplier: 1.22
+    drivingStyle: 'CONTROL: slower, with the widest PERFECT window'
+  - id: pickup truck cars/pickup color 2
+    displayName: Pickup - Color 2
+    familyName: Pickup
+    variantName: Color 2
+    prefab: {fileID: 5183774946084140008, guid: b98b3c5e4846e9843a93807637021eb3, type: 3}
+    gemCost: 175
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.94
+    perfectWindowMultiplier: 1.22
+    drivingStyle: 'CONTROL: slower, with the widest PERFECT window'
+  - id: pickup truck cars/pickup color 3
+    displayName: Pickup - Color 3
+    familyName: Pickup
+    variantName: Color 3
+    prefab: {fileID: 1881146553842026363, guid: df0bda52d3acacb46aeb84582140b89f, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.94
+    perfectWindowMultiplier: 1.22
+    drivingStyle: 'CONTROL: slower, with the widest PERFECT window'
+  - id: car1
+    displayName: Car1
+    familyName: Road Classics
+    variantName: Car1
+    prefab: {fileID: 4695957159649180562, guid: d8a38e887e96d694894a36eaf7ec145b, type: 3}
+    gemCost: 300
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.02
+    perfectWindowMultiplier: 1.04
+    drivingStyle: 'BALANCED: an all-round road car'
+  - id: car2
+    displayName: Car2
+    familyName: Road Classics
+    variantName: Car2
+    prefab: {fileID: 2672864514906475514, guid: 22c9c216bad815c41ab718efa15f912b, type: 3}
+    gemCost: 375
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.05
+    perfectWindowMultiplier: 0.96
+    drivingStyle: 'RUSH: higher speed and tighter turns'
+  - id: car3
+    displayName: Car3
+    familyName: Road Classics
+    variantName: Car3
+    prefab: {fileID: 864538881232866547, guid: a686086459191ea4994078fe68c2bf63, type: 3}
+    gemCost: 450
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.97
+    perfectWindowMultiplier: 1.16
+    drivingStyle: 'CONTROL: relaxed speed and easier turns'
+  - id: car4
+    displayName: Car4
+    familyName: Road Classics
+    variantName: Car4
+    prefab: {fileID: 4849416383976443089, guid: 1d0173f883989e14493677c41ae5a073, type: 3}
+    gemCost: 525
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.02
+    perfectWindowMultiplier: 1.04
+    drivingStyle: 'BALANCED: an all-round road car'
+  - id: car5
+    displayName: Car5
+    familyName: Road Classics
+    variantName: Car5
+    prefab: {fileID: 2749458917958626468, guid: 70b6b2f84042c5546b88956fe74b0c66, type: 3}
+    gemCost: 600
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.05
+    perfectWindowMultiplier: 0.96
+    drivingStyle: 'RUSH: higher speed and tighter turns'
+  - id: car6
+    displayName: Car6
+    familyName: Road Classics
+    variantName: Car6
+    prefab: {fileID: 2270258410762528488, guid: 2eeca4fa75195b14d9063034a4d2c63f, type: 3}
+    gemCost: 675
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.97
+    perfectWindowMultiplier: 1.16
+    drivingStyle: 'CONTROL: relaxed speed and easier turns'
+  - id: car7
+    displayName: Car7
+    familyName: Road Classics
+    variantName: Car7
+    prefab: {fileID: 2686982419682777703, guid: dc8c2427d4e766843b3b93ad9de149ba, type: 3}
+    gemCost: 750
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.02
+    perfectWindowMultiplier: 1.04
+    drivingStyle: 'BALANCED: an all-round road car'
+  - id: car8
+    displayName: Car8
+    familyName: Road Classics
+    variantName: Car8
+    prefab: {fileID: 1900681226621404113, guid: 7e4d049e6a79539479a2e9e98c071bfe, type: 3}
+    gemCost: 825
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.05
+    perfectWindowMultiplier: 0.96
+    drivingStyle: 'RUSH: higher speed and tighter turns'
+  - id: samurai cars/samurai_black_a
+    displayName: Samurai A - Black
+    familyName: Samurai A
+    variantName: Black
+    prefab: {fileID: 3225874551983908691, guid: f3b109a5b4abb3e4185dd26641ba5049, type: 3}
+    gemCost: 450
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_bluedark_a
+    displayName: Samurai A - Blue Dark
+    familyName: Samurai A
+    variantName: Blue Dark
+    prefab: {fileID: 3225874551983908691, guid: cc554bb0f22767647bda06fe2e58d259, type: 3}
+    gemCost: 500
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_green_a
+    displayName: Samurai A - Green
+    familyName: Samurai A
+    variantName: Green
+    prefab: {fileID: 3225874551983908691, guid: 9eab1de4da5c9c944b88735b82397297, type: 3}
+    gemCost: 200
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_greendark_a
+    displayName: Samurai A - Green Dark
+    familyName: Samurai A
+    variantName: Green Dark
+    prefab: {fileID: 3225874551983908691, guid: ab6587ca67c97be44ac689443e08cf56, type: 3}
+    gemCost: 550
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_grey_a
+    displayName: Samurai A - Grey
+    familyName: Samurai A
+    variantName: Grey
+    prefab: {fileID: 3225874551983908691, guid: 0476ef45f5a869d4e9c1580f077c56f2, type: 3}
+    gemCost: 400
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_red_a
+    displayName: Samurai A - Red
+    familyName: Samurai A
+    variantName: Red
+    prefab: {fileID: 3225874551983908691, guid: 36a41c90a034dc34ca9cac8f5f00f1d6, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_reddark_a
+    displayName: Samurai A - Red Dark
+    familyName: Samurai A
+    variantName: Red Dark
+    prefab: {fileID: 3225874551983908691, guid: 9c17d5d38fdc27647981beb33c1401fa, type: 3}
+    gemCost: 600
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_white_a
+    displayName: Samurai A - White
+    familyName: Samurai A
+    variantName: White
+    prefab: {fileID: 3225874551983908691, guid: c87bdd9df1c4f8140b45149753d7fe51, type: 3}
+    gemCost: 350
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_yellow_a
+    displayName: Samurai A - Yellow
+    familyName: Samurai A
+    variantName: Yellow
+    prefab: {fileID: 3225874551983908691, guid: 5c2dae08a90c27b4fb04d401da666b6b, type: 3}
+    gemCost: 300
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_black_b
+    displayName: Samurai B - Black
+    familyName: Samurai B
+    variantName: Black
+    prefab: {fileID: 3225874551983908691, guid: d8dc3a92ba4237b4ba8174ff97447788, type: 3}
+    gemCost: 450
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_blue_b
+    displayName: Samurai B - Blue
+    familyName: Samurai B
+    variantName: Blue
+    prefab: {fileID: 3225874551983908691, guid: 21a93a4bb4984ee4497a05d368fba51d, type: 3}
+    gemCost: 150
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_bluedark_b
+    displayName: Samurai B - Blue Dark
+    familyName: Samurai B
+    variantName: Blue Dark
+    prefab: {fileID: 3225874551983908691, guid: c57e462ca0057b84ea3c4803ca58eadb, type: 3}
+    gemCost: 500
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_green_b
+    displayName: Samurai B - Green
+    familyName: Samurai B
+    variantName: Green
+    prefab: {fileID: 3225874551983908691, guid: aab421362f293dd4db2871de5c8029c4, type: 3}
+    gemCost: 200
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_greendark_b
+    displayName: Samurai B - Green Dark
+    familyName: Samurai B
+    variantName: Green Dark
+    prefab: {fileID: 3225874551983908691, guid: 3ef51ecb9756ffd4e9e7b41b5a304836, type: 3}
+    gemCost: 550
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_grey_b
+    displayName: Samurai B - Grey
+    familyName: Samurai B
+    variantName: Grey
+    prefab: {fileID: 3225874551983908691, guid: cf4ae20e8e56b1444bdc10984b972dbb, type: 3}
+    gemCost: 400
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_red_b
+    displayName: Samurai B - Red
+    familyName: Samurai B
+    variantName: Red
+    prefab: {fileID: 3225874551983908691, guid: 4f30989ac1c4fae4f83badf11a255f26, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_reddark_b
+    displayName: Samurai B - Red Dark
+    familyName: Samurai B
+    variantName: Red Dark
+    prefab: {fileID: 3225874551983908691, guid: 39b5c4f3d87de6744bb7a220d2b7882c, type: 3}
+    gemCost: 600
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_white_b
+    displayName: Samurai B - White
+    familyName: Samurai B
+    variantName: White
+    prefab: {fileID: 3225874551983908691, guid: 698b509d7eadf074483d13e527c8921d, type: 3}
+    gemCost: 350
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: samurai cars/samurai_yellow_b
+    displayName: Samurai B - Yellow
+    familyName: Samurai B
+    variantName: Yellow
+    prefab: {fileID: 3225874551983908691, guid: 3018f6139c18ed84c82059d47cfeeb40, type: 3}
+    gemCost: 300
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1
+    perfectWindowMultiplier: 1.15
+    drivingStyle: 'PRECISION: balanced speed and excellent handling'
+  - id: sedan cars/sedan color 1
+    displayName: Sedan - Color 1
+    familyName: Sedan
+    variantName: Color 1
+    prefab: {fileID: 6012248048251265860, guid: 1d3ca4e86e313ab43bf305936d523fab, type: 3}
+    gemCost: 100
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.98
+    perfectWindowMultiplier: 1.12
+    drivingStyle: 'CRUISER: steady and easy to control'
+  - id: sedan cars/sedan color 2
+    displayName: Sedan - Color 2
+    familyName: Sedan
+    variantName: Color 2
+    prefab: {fileID: 8777458572322833566, guid: 868b36beb50ac40458c9637d478e3ca1, type: 3}
+    gemCost: 175
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.98
+    perfectWindowMultiplier: 1.12
+    drivingStyle: 'CRUISER: steady and easy to control'
+  - id: sedan cars/sedan color 3
+    displayName: Sedan - Color 3
+    familyName: Sedan
+    variantName: Color 3
+    prefab: {fileID: 1143976150911545154, guid: 5a37d329df7ef5840aaa874d0d6711a6, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 0.98
+    perfectWindowMultiplier: 1.12
+    drivingStyle: 'CRUISER: steady and easy to control'
+  - id: sports type cars/sports type a color 1
+    displayName: Sports Type A - Color 1
+    familyName: Sports Type A
+    variantName: Color 1
+    prefab: {fileID: 5128785793726237720, guid: 5419fb931b1bcbe4ea1260bd1b2a1e4b, type: 3}
+    gemCost: 100
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.08
+    perfectWindowMultiplier: 0.9
+    drivingStyle: 'SPRINTER: faster, with more precise turns'
+  - id: sports type cars/sports type a color 2
+    displayName: Sports Type A - Color 2
+    familyName: Sports Type A
+    variantName: Color 2
+    prefab: {fileID: 6024408582441246799, guid: fa416e4067c149048b583576044a735a, type: 3}
+    gemCost: 175
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.08
+    perfectWindowMultiplier: 0.9
+    drivingStyle: 'SPRINTER: faster, with more precise turns'
+  - id: sports type cars/sports type a color 3
+    displayName: Sports Type A - Color 3
+    familyName: Sports Type A
+    variantName: Color 3
+    prefab: {fileID: 5074734967765630289, guid: 8de93ecc5acfba747be67b3389b844cf, type: 3}
+    gemCost: 250
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.08
+    perfectWindowMultiplier: 0.9
+    drivingStyle: 'SPRINTER: faster, with more precise turns'
+  - id: sports type cars/sports type b color 1
+    displayName: Sports Type B - Color 1
+    familyName: Sports Type B
+    variantName: Color 1
+    prefab: {fileID: 5903286580831233026, guid: 4dd28b523733b974fbaa25691ba23487, type: 3}
+    gemCost: 100
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.08
+    perfectWindowMultiplier: 0.9
+    drivingStyle: 'SPRINTER: faster, with more precise turns'
+  - id: sports type cars/sports type b color 2
+    displayName: Sports Type B - Color 2
+    familyName: Sports Type B
+    variantName: Color 2
+    prefab: {fileID: 6081409773092042198, guid: b79ed9464c0d9eb4eafd4e77c5509d92, type: 3}
+    gemCost: 175
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.08
+    perfectWindowMultiplier: 0.9
+    drivingStyle: 'SPRINTER: faster, with more precise turns'
+  - id: taxi sedan cars/taxi muscle
+    displayName: Taxi Muscle
+    familyName: Taxi Muscle
+    variantName: Standard
+    prefab: {fileID: 7838622382615488908, guid: da85788d53f51144c8028db0f58d8910, type: 3}
+    gemCost: 350
+    startsUnlocked: 0
+    rewardedAdUnlock: 1
+    speedMultiplier: 1.03
+    perfectWindowMultiplier: 1.08
+    drivingStyle: 'POWER: quick, with forgiving turns'

@@ -1,0 +1,40 @@
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Bb]uild/
+[Bb]uilds/
+
+# Generated IDE files
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.pidb
+*.booproj
+
+# Android signing credentials must never be committed
+*.keystore
+*.jks
+
+
+# Local temporary and build files
+.utmp/
+firebase-debug.log
+*.apk
+*.aab
+*.apks
+
+# File exceeds GitHub's 100 MB limit and is not needed for Android
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-*.bundle
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-*.bundle.meta
+
+# Additional credentials
+*.p12
+*.pem
+*.key
+.env

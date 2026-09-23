@@ -1,0 +1,224 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32bc172886e54a71889850d577a60ba4, type: 3}
+  m_Name: BackgroundConfig
+  m_EditorClassIdentifier: ZigZag.Config::BackgroundConfigAsset
+  settings:
+    transitionDuration: 3
+    transitionSoftness: 0.13
+    transitionCrossFade: 0.24
+    gameplayColorInterval: 10
+    motionSpeed: 0.28
+    effectIntensity: 0.42
+    menuMoodInterval: 9
+    pulseFadeSpeed: 0.65
+    comboForMaximumPulse: 12
+    transitionAnimations:
+    - name: Smooth Fade
+      style: 0
+      enabled: 1
+    - name: Vertical Wipe Up
+      style: 1
+      enabled: 1
+    - name: Vertical Wipe Down
+      style: 2
+      enabled: 1
+    - name: Horizontal Wipe Left
+      style: 3
+      enabled: 1
+    - name: Horizontal Wipe Right
+      style: 4
+      enabled: 1
+    - name: Radial Bloom
+      style: 5
+      enabled: 1
+    - name: Radial Collapse
+      style: 6
+      enabled: 1
+    - name: Diagonal Rise
+      style: 7
+      enabled: 1
+    - name: Diagonal Fall
+      style: 8
+      enabled: 1
+    - name: Clock Sweep
+      style: 9
+      enabled: 1
+    - name: Liquid Wave
+      style: 10
+      enabled: 1
+    - name: Twin Wave
+      style: 11
+      enabled: 1
+    - name: Spiral Reveal
+      style: 12
+      enabled: 1
+    - name: Diamond Reveal
+      style: 13
+      enabled: 1
+    - name: Venetian Bands
+      style: 14
+      enabled: 1
+    - name: Checker Flow
+      style: 15
+      enabled: 1
+    - name: Soft Noise Dissolve
+      style: 16
+      enabled: 1
+    - name: Aurora Sweep
+      style: 17
+      enabled: 1
+    - name: Elliptical Iris
+      style: 18
+      enabled: 1
+    - name: Ripple Ring
+      style: 19
+      enabled: 1
+    themes:
+    - topColors:
+      - 7048e8
+      - e73c78
+      - e85d35
+      - d99a18
+      - 008fb3
+      - 159a8c
+      - 55a85c
+      - 3478d4
+      - d52b78
+      - 8449c6
+      middleColors:
+      - a855f7
+      - ff6f91
+      - ff8c42
+      - f9c74f
+      - 20c5e8
+      - 39c6ad
+      - 80cf72
+      - 55a7ff
+      - ff5da2
+      - bd6cff
+      bottomColors:
+      - 5b3bc4
+      - bd3b72
+      - c6533e
+      - b88724
+      - 0093a8
+      - 249c89
+      - 4c9e59
+      - 3575c4
+      - b72c68
+      - 7142ba
+      accentColors:
+      - 35f2ff
+      - ffe66d
+      - 5cffb1
+      - ff4d6d
+      - ffd60a
+      - ff70a6
+      - b06cff
+      - ffb703
+      - 4dffdb
+      - ffe169
+    - topColors:
+      - 1268e8
+      - 009ac7
+      - 00a884
+      - 39a844
+      - 9cab16
+      - d68b14
+      - e84b20
+      - d62976
+      - 7a35c7
+      - 455ed1
+      middleColors:
+      - 3694ff
+      - 20c9e8
+      - 20c997
+      - 72cf62
+      - c9d934
+      - ffbd3e
+      - ff7145
+      - f04e9b
+      - a963f2
+      - 6f8cff
+      bottomColors:
+      - 1556ac
+      - 087b98
+      - 087d67
+      - 337c3b
+      - 778617
+      - a46b19
+      - b63e24
+      - a92b68
+      - 6031a0
+      - 374fa6
+      accentColors:
+      - 72f6ff
+      - b4ff39
+      - ffe84a
+      - 42f5c5
+      - ff5bd7
+      - 53e0ff
+      - 8cff66
+      - ffd23f
+      - 3fffe2
+      - ff7a59
+    - topColors:
+      - 5637c8
+      - 315fc9
+      - 8a3bb5
+      - c63686
+      - b94750
+      - 1689b5
+      - 168f78
+      - a17817
+      - 7352a6
+      - 43556f
+      middleColors:
+      - 8c59f2
+      - 4f8df7
+      - c45ce0
+      - f05bac
+      - ee6a63
+      - 35bce0
+      - 39c39b
+      - d6ac35
+      - a87bd6
+      - 6e87a8
+      bottomColors:
+      - 422ca1
+      - 294d9f
+      - 713092
+      - 9d2e6d
+      - 983b43
+      - 14718f
+      - 14745f
+      - 806119
+      - 5e4389
+      - 35465e
+      accentColors:
+      - 44f0ff
+      - ff68cf
+      - ffe45c
+      - 58ffb1
+      - 7ee8ff
+      - ff9f43
+      - c77dff
+      - 5ef2d6
+      - ff6b6b
+      - a8ff60
+    speedBoostAccent: ff521f
+    slowMotionAccent: 33bfff
+    shieldAccent: 33ff8c
+    gemMagnetAccent: e640ff
+    mysteryAccent: ffd12e
+    gameOverAccent: ff2e40

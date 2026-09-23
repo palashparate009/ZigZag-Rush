@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 795d8e26d23a4dff9691c7df253665cc, type: 3}
+  m_Name: ChallengeConfig
+  m_EditorClassIdentifier: ZigZag.Config::ChallengeConfigAsset
+  settings:
+    dailyTargetMin: 45
+    dailyTargetRange: 56
+    dailyTargetReward: 10
+    dailyRunsTarget: 3
+    dailyRunsReward: 5
+    dailyGemsTarget: 15
+    dailyGemsReward: 5
+    dailyComboTarget: 6
+    dailyComboReward: 8
+    dailyScoreTarget: 200
+    dailyScoreReward: 12
+    weeklyRunsTarget: 15
+    weeklyRunsReward: 20
+    weeklyScoreTarget: 1000
+    weeklyScoreReward: 25
+    weeklyGemsTarget: 75
+    weeklyGemsReward: 25
+    weeklyComboTarget: 12
+    weeklyComboReward: 30
+    weeklyBestTarget: 150
+    weeklyBestReward: 35
+    missionScoreTarget: 60
+    missionScoreReward: 5
+    missionComboTarget: 8
+    missionComboReward: 7
+    missionGemsTarget: 15
+    missionGemsReward: 5
+    missionRunsTarget: 5
+    missionRunsReward: 8
+    missionTotalScoreTarget: 300
+    missionTotalScoreReward: 10
+    achievementScore50Target: 50
+    achievementScore50Reward: 25
+    achievementCombo10Target: 10
+    achievementCombo10Reward: 35
+    achievementScore200Target: 200
+    achievementScore200Reward: 75

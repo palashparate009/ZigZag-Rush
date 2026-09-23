@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c0d296a2828473d9fb1017fde6d965f, type: 3}
+  m_Name: AdsConfig
+  m_EditorClassIdentifier: ZigZag.Config::AdsConfigAsset
+  settings:
+    adsEnabled: 1
+    androidAppKey: 27e8d6dbd
+    rewardedAdUnitId: z2ymdwmbjvj6xc68
+    interstitialAdUnitId: 5idp7gb71pk5lwv6
+    bannerAdsEnabled: 1
+    bannerAdUnitId: 5h6pm2tvhfy7jvib
+    bannerPlacement: Main_Menu_Banner
+    bannerPosition: BottomCenter
+    bannerUseAdaptiveSize: 1
+    bannerRespectSafeArea: 1
+    adMobEnabled: 1
+    adMobAppId: ca-app-pub-8757024569931584~3937763004
+    adMobBannerAdUnitId: ca-app-pub-8757024569931584/4629484419
+    adLoadRetrySeconds: 15
+    interstitialEveryRuns: 4
+    certifiedCmpConfigured: 1
+    targetAudienceReviewed: 1
+    childDirected: 0
+    revivePlacement: Revive
+    doubleGemsPlacement: Double_Gems
+    carUnlockPlacement: Unlock_Car
+    gameOverPlacement: Game_Over

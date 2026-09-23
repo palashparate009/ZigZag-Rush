@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd23bb52c39a4bb9804c90c0d3484447, type: 3}
+  m_Name: GhostConfig
+  m_EditorClassIdentifier: ZigZag.Config::GhostConfigAsset
+  settings:
+    enabled: 1
+    sampleInterval: 0.08
+    maximumRecordedFrames: 7500
+    verticalOffset: 0.08
+    scaleMultiplier: 1
+    opacity: 0.28
+    preserveOriginalColors: 1
+    tintColor: {r: 1, g: 1, b: 1, a: 1}
+    rimColor: {r: 1, g: 1, b: 1, a: 1}
+    rimStrength: 0.2
+    rimPower: 2.2
+    faceAlphaFactor: 0.42
+    rimAlphaFactor: 0.65

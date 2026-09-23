@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89807add98ed4f49a471260c46891cad, type: 3}
+  m_Name: GameplayConfig
+  m_EditorClassIdentifier: ZigZag.Config::GameplayConfigAsset
+  settings:
+    targetFrameRate: 60
+    maximumDeltaTime: 0.1
+    baseMoveSpeed: 8
+    newPlayerMoveSpeed: 5.5
+    newPlayerSpeedRunCount: 3
+    maximumDifficultySpeedMultiplier: 1.75
+    perfectTurnWindow: 0.34
+    newPlayerPerfectTurnWindow: 0.42
+    difficultyScoreCap: 250
+    comboScoreStep: 5
+    maxComboMultiplier: 5
+    gemScoreMultiplier: 2
+    gemSoundVolume: 0.25
+    speedBoostMultiplier: 1.35
+    slowMotionMultiplier: 0.72
+    specialEffectDuration: 3
+    gemMagnetRadius: 9
+    mysteryRewardMinInclusive: 3
+    mysteryRewardMaxExclusive: 9
+    specialTooltipDistance: 16
+    reviveSafetyInset: 0.8
+    reviveRunwayTiles: 5
+    perfectShakeDuration: 0.09
+    perfectShakeIntensity: 0.07
+    perfectHapticDurationMs: 24
+    perfectHapticAmplitude: 100
+    newBestHapticDurationMs: 42
+    newBestHapticAmplitude: 100
+    newBestSoundVolume: 0.8
+    deathShakeDuration: 0.3
+    deathShakeIntensity: 0.18
+    menuMusicVolume: 0.55
+    gameplayMusicVolume: 0.65
+    specialTilesStartScore: 12
+    fullSpecialTilesScore: 35
+    specialTileChanceMin: 0.06
+    specialTileChanceMax: 0.16
+    specialTileMinGap: 4
+    diamondChanceMin: 0.12
+    diamondChanceMax: 0.2
+    earlyMaxStraightTiles: 5
+    midMaxStraightTiles: 4
+    lateMaxStraightTiles: 3
+    midRoadDifficultyThreshold: 0.35
+    lateRoadDifficultyThreshold: 0.7
+    movingTileSpeed: 2
+    movingTileAmplitude: 0.22
+    crumblingTileDelay: 0.42
+    crumblingTileExitDelay: 0.03
+    normalTileFallDelay: 0.2
+    platformRecycleDelay: 1.2
+    reviveCountdownStepSeconds: 0.42
+    reviveCountdownGoSeconds: 0.25
+    routeBranchesEnabled: 1
+    routeBranchesStartScore: 25
+    routeBranchChanceMin: 0.015
+    routeBranchChanceMax: 0.045
+    routeBranchCooldownTiles: 18
+    routeBranchLength: 3
+    riskRouteGemChance: 0.85
+    riskRouteHazardSpacing: 3
+    smoothVisualTurns: 1
+    visualTurnDuration: 0.16
+    visualTurnEase: OutCubic
+    scoreMilestones: 0a000000190000003200000064000000c8000000f4010000
+    specialTileVisuals:
+      normalThemeColors:
+      - {r: 0.98, g: 0.95, b: 0.88, a: 1}
+      - {r: 0.08, g: 0.13, b: 0.23, a: 1}
+      - {r: 0.22, g: 0.18, b: 0.32, a: 1}
+      speedBoostColor: {r: 1, g: 0.45, b: 0.05, a: 1}
+      slowMotionColor: {r: 0.15, g: 0.8, b: 1, a: 1}
+      shieldColor: {r: 0.2, g: 1, b: 0.4, a: 1}
+      gemMagnetColor: {r: 0.85, g: 0.2, b: 1, a: 1}
+      crumblingColor: {r: 0.75, g: 0.18, b: 0.12, a: 1}
+      movingColor: {r: 1, g: 0.8, b: 0.1, a: 1}
+      mysteryColor: {r: 1, g: 0.15, b: 0.65, a: 1}
+      activationTextColor: {r: 0, g: 0, b: 0, a: 1}
