@@ -33,6 +33,14 @@ public class CarController : MonoBehaviour
     public Vector3 LastSafePlatformPosition => lastSafePlatformPosition;
     public Vector3 MovementDirection => moveDirection;
 
+    // Use the horizontal position at which the player actually fell, while
+    // retaining the road's height. A shield can then build its rescue tile at
+    // the fall location instead of sending the player back to an older corner.
+    public Vector3 ShieldRespawnPlatformPosition => new Vector3(
+        transform.position.x,
+        lastSafePlatformPosition.y,
+        transform.position.z);
+
     private static readonly Color[] SkinColours =
     {
         new Color(0.95f, 0.12f, 0.18f), new Color(0.05f, 0.75f, 1f),
@@ -97,13 +105,10 @@ public class CarController : MonoBehaviour
     {
         if (GameManager.instance == null || GameManager.instance.State != GameState.Playing) return;
         GameplayConfig config = ConfigManager.Current.gameplay;
-        bool beginnerSpeedEnabled = IsNewPlayer(config);
-        float configuredBaseSpeed = beginnerSpeedEnabled
-            ? config.newPlayerMoveSpeed
-            : config.baseMoveSpeed;
+        float configuredBaseSpeed = GameManager.instance.RunMoveSpeed;
         if (configuredBaseSpeed <= 0f) configuredBaseSpeed = moveSpeed;
         float difficultySpeed = Mathf.Lerp(
-            1f, config.maximumDifficultySpeedMultiplier, GameManager.instance.Difficulty01);
+            1f, GameManager.instance.RunMaximumDifficultySpeedMultiplier, GameManager.instance.Difficulty01);
         float speed = configuredBaseSpeed * carSpeedMultiplier * difficultySpeed * GameManager.instance.SpeedMultiplier;
         if (rotationPending)
         {
@@ -161,6 +166,29 @@ public class CarController : MonoBehaviour
         desiredRotation = lastSafeRotation;
         rotationPending = false;
         SetMovementDirection(lastSafeRotation);
+        transform.SetPositionAndRotation(body.position, body.rotation);
+        ResetVisualTurn();
+    }
+
+    public void ReviveAtPlatform(Vector3 platformPosition, Vector3 direction)
+    {
+        body.linearVelocity = Vector3.zero;
+        body.angularVelocity = Vector3.zero;
+
+        bool travelsRight = Mathf.Abs(direction.x) >= Mathf.Abs(direction.z);
+        Quaternion reviveRotation = travelsRight
+            ? Quaternion.Euler(0f, 90f, 0f)
+            : Quaternion.identity;
+        float standingHeight = Mathf.Max(0.25f, lastSafePosition.y - lastSafePlatformPosition.y) + 0.25f;
+
+        body.position = platformPosition + Vector3.up * standingHeight;
+        body.rotation = reviveRotation;
+        desiredRotation = reviveRotation;
+        rotationPending = false;
+        SetMovementDirection(reviveRotation);
+        lastSafePosition = body.position;
+        lastSafePlatformPosition = platformPosition;
+        lastSafeRotation = reviveRotation;
         transform.SetPositionAndRotation(body.position, body.rotation);
         ResetVisualTurn();
     }
@@ -303,9 +331,10 @@ public class CarController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Diamond")) return;
-        GameManager.instance.DiamondScore();
-        if (particleEffect != null) Instantiate(particleEffect, other.transform.position, particleEffect.transform.rotation);
-        other.gameObject.SetActive(false);
+
+        GemMagnetPickup gem = other.GetComponentInParent<GemMagnetPickup>();
+        if (gem == null) gem = other.gameObject.AddComponent<GemMagnetPickup>();
+        if (!gem.CollectAtCar(transform)) return;
     }
 
     private void CreateTrail()

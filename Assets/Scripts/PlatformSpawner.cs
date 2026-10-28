@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PlatformSpawner : MonoBehaviour
 {
+    // Increment this whenever the deterministic daily-road algorithm changes.
+    // Old position ghosts are then ignored instead of being replayed on a
+    // different route after an update.
+    public const int DailyRouteVersion = 4;
+
     private static readonly SpecialTileType[] EarlyTileTypes =
     {
         SpecialTileType.SpeedBoost, SpecialTileType.SlowMotion, SpecialTileType.Shield,
@@ -30,8 +35,11 @@ public class PlatformSpawner : MonoBehaviour
     private int straightLength;
     private int theme;
     private bool configured;
+    private bool initialized;
     private bool stopped;
     private System.Random seededRandom;
+    private bool dailyRoute;
+    private int dailyGeneratedTileCount;
     private Vector3 generationStartPosition;
     private readonly List<Platform> initialRunwayPlatforms = new List<Platform>();
     private readonly List<Vector3> initialRunwayPositions = new List<Vector3>();
@@ -39,15 +47,32 @@ public class PlatformSpawner : MonoBehaviour
     private Transform playerTransform;
     private int tilesSinceBranch = 999;
     private int tilesSinceSpecialTile = 999;
+    private int tilesSinceDiamond = 999;
+    private float dailyRouteElapsed;
+
+    public float RouteClock => dailyRoute ? dailyRouteElapsed : Time.fixedTime;
 
     private void Start()
     {
+        EnsureInitialized();
+    }
+
+    private void FixedUpdate()
+    {
+        if (dailyRoute && GameManager.instance != null && GameManager.instance.State == GameState.Playing)
+            dailyRouteElapsed += Time.fixedDeltaTime;
+    }
+
+    private void EnsureInitialized()
+    {
+        if (initialized) return;
         if (!configured) Configure(false, GameProgress.SelectedTheme);
         CaptureInitialRunway();
         generationStartPosition = lastPlatform != null ? lastPlatform.position : Vector3.zero;
         lastPosition = generationStartPosition;
         BuildPool();
         for (int i = 0; i < lookAheadPlatforms; i++) SpawnOne();
+        initialized = true;
     }
 
     private void CaptureInitialRunway()
@@ -78,6 +103,10 @@ public class PlatformSpawner : MonoBehaviour
         theme = selectedTheme;
         configured = true;
         stopped = false;
+        dailyRoute = daily;
+        dailyGeneratedTileCount = 0;
+        dailyRouteElapsed = 0f;
+        tilesSinceDiamond = 999;
         int dailySeed = DateTime.UtcNow.Year * 1000 + DateTime.UtcNow.DayOfYear;
         seededRandom = daily ? new System.Random(dailySeed) : null;
         if (playerTransform == null)
@@ -99,6 +128,10 @@ public class PlatformSpawner : MonoBehaviour
 
     public void ResetForNewRun(bool daily, int selectedTheme)
     {
+        // GameManager can auto-start a Daily Run during scene startup. Ensure
+        // the fixed scene runway has been captured first; otherwise a reset can
+        // use the default Vector3.zero origin and begin halfway along a road.
+        EnsureInitialized();
         stopped = true;
 
         List<Platform> oldPlatforms = new List<Platform>(activePlatforms);
@@ -121,6 +154,7 @@ public class PlatformSpawner : MonoBehaviour
         straightLength = 0;
         tilesSinceBranch = 999;
         tilesSinceSpecialTile = 999;
+        tilesSinceDiamond = 999;
 
         foreach (Vector3 runwayPosition in initialRunwayPositions)
             SpawnAt(runwayPosition, SpecialTileType.Normal, false);
@@ -195,7 +229,7 @@ public class PlatformSpawner : MonoBehaviour
         SpecialTileType type = ChooseTileType();
         GameplayConfig config = ConfigManager.Current.gameplay;
         bool diamond = type == SpecialTileType.Normal &&
-                       NextFloat() < Mathf.Lerp(config.diamondChanceMin, config.diamondChanceMax, CurrentDifficulty());
+                       ShouldSpawnDiamond(Mathf.Lerp(config.diamondChanceMin, config.diamondChanceMax, CurrentDifficulty()));
         SpawnAt(lastPosition, type, diamond);
         tilesSinceBranch++;
         if (type == SpecialTileType.Normal) tilesSinceSpecialTile++;
@@ -208,14 +242,23 @@ public class PlatformSpawner : MonoBehaviour
         if (pool.Count > 0) tile = pool.Dequeue();
         else tile = Instantiate(platform, transform).GetComponent<Platform>();
         tile.gameObject.SetActive(false);
-        tile.Initialize(this, position, type, theme, diamond, routeChoiceMarker);
+        // Moving tiles also need a seeded phase. Otherwise their vertical
+        // position differs between attempts even when the road layout matches.
+        float movementOffset = dailyRoute ? NextFloat() * 10f : -1f;
+        tile.Initialize(this, position, type, theme, diamond, routeChoiceMarker, movementOffset);
         tile.gameObject.SetActive(true);
         activePlatforms.Add(tile);
+        tilesSinceDiamond = diamond ? 0 : tilesSinceDiamond + 1;
+        if (dailyRoute) dailyGeneratedTileCount++;
     }
 
     private bool TrySpawnRouteBranch()
     {
         GameplayConfig config = ConfigManager.Current.gameplay;
+        // A position ghost cannot remain on the same road when two attempts can
+        // choose different branches. Daily runs therefore use one fixed route.
+        if (dailyRoute) return false;
+
         int score = GameManager.instance != null ? GameManager.instance.Score : 0;
         if (!config.routeBranchesEnabled || score < config.routeBranchesStartScore ||
             tilesSinceBranch < config.routeBranchCooldownTiles) return false;
@@ -251,7 +294,7 @@ public class PlatformSpawner : MonoBehaviour
         {
             position += firstAxis;
             SpawnAt(position, risky ? RiskTileFor(i) : SpecialTileType.Normal,
-                risky && NextFloat() <= gemChance, i == 1 ? (risky ? 1 : -1) : 0);
+                risky && ShouldSpawnDiamond(gemChance), i == 1 ? (risky ? 1 : -1) : 0);
         }
 
         // The common endpoint is spawned once after both paths.
@@ -259,7 +302,7 @@ public class PlatformSpawner : MonoBehaviour
         {
             position += secondAxis;
             SpawnAt(position, risky ? RiskTileFor(length + i) : SpecialTileType.Normal,
-                risky && NextFloat() <= gemChance);
+                risky && ShouldSpawnDiamond(gemChance));
         }
     }
 
@@ -309,7 +352,7 @@ public class PlatformSpawner : MonoBehaviour
 
     private SpecialTileType ChooseTileType()
     {
-        int score = GameManager.instance != null ? GameManager.instance.Score : 0;
+        int score = CurrentRouteScore();
         GameplayConfig config = ConfigManager.Current.gameplay;
         int minimumGap = config.specialTileMinGap > 0
             ? Mathf.Clamp(config.specialTileMinGap, 2, 12)
@@ -325,7 +368,24 @@ public class PlatformSpawner : MonoBehaviour
 
     private float CurrentDifficulty()
     {
+        if (dailyRoute)
+            return Mathf.Clamp01(dailyGeneratedTileCount /
+                                 (float)Mathf.Max(1, ConfigManager.Current.gameplay.difficultyScoreCap));
         return GameManager.instance != null ? GameManager.instance.Difficulty01 : 0f;
+    }
+
+    private int CurrentRouteScore()
+    {
+        return dailyRoute
+            ? dailyGeneratedTileCount
+            : GameManager.instance != null ? GameManager.instance.Score : 0;
+    }
+
+    private bool ShouldSpawnDiamond(float chance)
+    {
+        GameplayConfig config = ConfigManager.Current.gameplay;
+        int minimumGap = Mathf.Clamp(config.diamondMinGap, 2, 20);
+        return tilesSinceDiamond >= minimumGap && NextFloat() < Mathf.Clamp01(chance);
     }
 
     private int NextInt(int min, int max)

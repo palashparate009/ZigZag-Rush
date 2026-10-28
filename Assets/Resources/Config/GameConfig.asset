@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c9fcd06255e4c5eaf7883ba19c1b387, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: ZigZag.Config::GameConfigAsset
-  version: 5
+  version: 14
   network: {fileID: 11400000, guid: 2e9eb5d90c4154847a3206a760591514, type: 2}
   services: {fileID: 11400000, guid: 40c8d9e35de1aba4cb4ea5a76de38181, type: 2}
   ads: {fileID: 11400000, guid: fbb9adafc7878b54b8c8a5564379c5ff, type: 2}

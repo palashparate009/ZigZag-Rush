@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public sealed class GameConfig
 {
-    public int version = 5;
+    public int version = 6;
     public NetworkConfig network = new NetworkConfig();
     public ServiceConfig services = new ServiceConfig();
     public AdsConfig ads = new AdsConfig();
@@ -24,6 +24,9 @@ public sealed class NetworkConfig
     public int cacheLifetimeMinutes = 60;
     public float loginTimeoutSeconds = 45f;
     public float playerProfileWaitSeconds = 3f;
+    public float connectivityCheckIntervalSeconds = 5f;
+    public float connectivityProbeTimeoutSeconds = 5f;
+    public string connectivityProbeUrl = "https://www.gstatic.com/generate_204";
     public bool firebaseRemoteConfigEnabled = true;
     public string firebaseRemoteConfigJsonKey = "game_config_json";
 }
@@ -105,9 +108,9 @@ public sealed class GameplayConfig
 {
     public int targetFrameRate = 60;
     public float maximumDeltaTime = 0.1f;
-    public float baseMoveSpeed = 8f;
-    public float newPlayerMoveSpeed = 5.5f;
-    public int newPlayerSpeedRunCount = 3;
+    public float baseMoveSpeed = 6f;
+    public float newPlayerMoveSpeed = 4.5f;
+    public int newPlayerSpeedRunCount = 10;
     public float maximumDifficultySpeedMultiplier = 1.75f;
     public float perfectTurnWindow = 0.34f;
     public float newPlayerPerfectTurnWindow = 0.42f;
@@ -120,6 +123,7 @@ public sealed class GameplayConfig
     public float slowMotionMultiplier = 0.72f;
     public float specialEffectDuration = 3f;
     public float gemMagnetRadius = 9f;
+    public float gemMagnetDuration = 5f;
     public int mysteryRewardMinInclusive = 3;
     public int mysteryRewardMaxExclusive = 9;
     public float specialTooltipDistance = 16f;
@@ -141,8 +145,9 @@ public sealed class GameplayConfig
     public float specialTileChanceMin = 0.06f;
     public float specialTileChanceMax = 0.16f;
     public int specialTileMinGap = 4;
-    public float diamondChanceMin = 0.12f;
-    public float diamondChanceMax = 0.2f;
+    public float diamondChanceMin = 0.05f;
+    public float diamondChanceMax = 0.1f;
+    public int diamondMinGap = 5;
     public int earlyMaxStraightTiles = 5;
     public int midMaxStraightTiles = 4;
     public int lateMaxStraightTiles = 3;
@@ -150,7 +155,7 @@ public sealed class GameplayConfig
     public float lateRoadDifficultyThreshold = 0.7f;
     public float movingTileSpeed = 2f;
     public float movingTileAmplitude = 0.22f;
-    public float crumblingTileDelay = 0.42f;
+    public float crumblingTileDelay = 1.5f;
     public float crumblingTileExitDelay = 0.03f;
     public float normalTileFallDelay = 0.2f;
     public float platformRecycleDelay = 1.2f;
@@ -206,6 +211,14 @@ public sealed class SpecialTileVisualConfig
     public Color movingColor = new Color(1f, 0.8f, 0.1f, 1f);
     public Color mysteryColor = new Color(1f, 0.15f, 0.65f, 1f);
     public Color activationTextColor = Color.black;
+    [Header("Top-of-block labels")]
+    public string speedBoostLabel = "BOOST";
+    public string slowMotionLabel = "SLOW";
+    public string shieldLabel = "SHIELD";
+    public string gemMagnetLabel = "MAGNET";
+    public string crumblingLabel = "CRUMBLE";
+    public string movingLabel = "MOVING";
+    public string mysteryLabel = "MYSTERY";
 
     public Color ResolveTileColor(int tileType, int theme)
     {
@@ -227,6 +240,26 @@ public sealed class SpecialTileVisualConfig
     public Color ResolveActivationTextColor()
     {
         return activationTextColor;
+    }
+
+    public string ResolveTileLabel(int tileType)
+    {
+        return tileType switch
+        {
+            1 => WithFallback(speedBoostLabel, "BOOST"),
+            2 => WithFallback(slowMotionLabel, "SLOW"),
+            3 => WithFallback(shieldLabel, "SHIELD"),
+            4 => WithFallback(gemMagnetLabel, "MAGNET"),
+            5 => WithFallback(crumblingLabel, "CRUMBLE"),
+            6 => WithFallback(movingLabel, "MOVING"),
+            7 => WithFallback(mysteryLabel, "MYSTERY"),
+            _ => string.Empty
+        };
+    }
+
+    private static string WithFallback(string configuredLabel, string fallback)
+    {
+        return string.IsNullOrWhiteSpace(configuredLabel) ? fallback : configuredLabel.Trim();
     }
 }
 
@@ -322,6 +355,10 @@ public sealed class BackgroundConfig
 [Serializable]
 public sealed class ChallengeConfig
 {
+    // Remote-configurable reward limits for every challenge category.
+    public int missionGemRewardMin = 5;
+    public int missionGemRewardMax = 10;
+    public int weeklyMissionGemReward = 20;
     public int dailyTargetMin = 45;
     public int dailyTargetRange = 56;
     public int dailyTargetReward = 10;
@@ -332,31 +369,31 @@ public sealed class ChallengeConfig
     public int dailyComboTarget = 6;
     public int dailyComboReward = 8;
     public int dailyScoreTarget = 200;
-    public int dailyScoreReward = 12;
-    public int weeklyRunsTarget = 15;
+    public int dailyScoreReward = 10;
+    public int weeklyRunsTarget = 20;
     public int weeklyRunsReward = 20;
-    public int weeklyScoreTarget = 1000;
-    public int weeklyScoreReward = 25;
-    public int weeklyGemsTarget = 75;
-    public int weeklyGemsReward = 25;
-    public int weeklyComboTarget = 12;
-    public int weeklyComboReward = 30;
-    public int weeklyBestTarget = 150;
-    public int weeklyBestReward = 35;
-    public int missionScoreTarget = 60;
+    public int weeklyScoreTarget = 1300;
+    public int weeklyScoreReward = 20;
+    public int weeklyGemsTarget = 100;
+    public int weeklyGemsReward = 20;
+    public int weeklyComboTarget = 14;
+    public int weeklyComboReward = 20;
+    public int weeklyBestTarget = 180;
+    public int weeklyBestReward = 20;
+    public int missionScoreTarget = 80;
     public int missionScoreReward = 5;
-    public int missionComboTarget = 8;
+    public int missionComboTarget = 10;
     public int missionComboReward = 7;
-    public int missionGemsTarget = 15;
+    public int missionGemsTarget = 20;
     public int missionGemsReward = 5;
-    public int missionRunsTarget = 5;
+    public int missionRunsTarget = 7;
     public int missionRunsReward = 8;
-    public int missionTotalScoreTarget = 300;
+    public int missionTotalScoreTarget = 400;
     public int missionTotalScoreReward = 10;
     public int achievementScore50Target = 50;
-    public int achievementScore50Reward = 25;
+    public int achievementScore50Reward = 5;
     public int achievementCombo10Target = 10;
-    public int achievementCombo10Reward = 35;
+    public int achievementCombo10Reward = 7;
     public int achievementScore200Target = 200;
-    public int achievementScore200Reward = 75;
+    public int achievementScore200Reward = 10;
 }

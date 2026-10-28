@@ -121,6 +121,9 @@ public sealed class ConfigManager : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(config.cloud.playersCollection)) config.cloud.playersCollection = defaults.cloud.playersCollection;
         if (string.IsNullOrWhiteSpace(config.network.firebaseRemoteConfigJsonKey)) config.network.firebaseRemoteConfigJsonKey = defaults.network.firebaseRemoteConfigJsonKey;
+        if (string.IsNullOrWhiteSpace(config.network.connectivityProbeUrl)) config.network.connectivityProbeUrl = defaults.network.connectivityProbeUrl;
+        config.network.connectivityCheckIntervalSeconds = Mathf.Clamp(config.network.connectivityCheckIntervalSeconds, 2f, 60f);
+        config.network.connectivityProbeTimeoutSeconds = Mathf.Clamp(config.network.connectivityProbeTimeoutSeconds, 2f, 15f);
         if (string.IsNullOrWhiteSpace(config.ads.bannerPlacement)) config.ads.bannerPlacement = defaults.ads.bannerPlacement;
         if (string.IsNullOrWhiteSpace(config.ads.bannerPosition)) config.ads.bannerPosition = defaults.ads.bannerPosition;
         config.ads.adLoadRetrySeconds = Mathf.Max(1f, config.ads.adLoadRetrySeconds);
@@ -133,7 +136,7 @@ public sealed class ConfigManager : MonoBehaviour
         if (config.gameplay.scoreMilestones == null) config.gameplay.scoreMilestones = defaults.gameplay.scoreMilestones;
         config.gameplay.baseMoveSpeed = Mathf.Clamp(config.gameplay.baseMoveSpeed, 4f, 12f);
         config.gameplay.newPlayerMoveSpeed = Mathf.Clamp(
-            config.gameplay.newPlayerMoveSpeed, 4f, config.gameplay.baseMoveSpeed);
+            config.gameplay.newPlayerMoveSpeed, 2.5f, config.gameplay.baseMoveSpeed);
         config.gameplay.newPlayerSpeedRunCount = Mathf.Clamp(
             config.gameplay.newPlayerSpeedRunCount, 0, 100);
         config.gameplay.maximumDifficultySpeedMultiplier = Mathf.Clamp(
@@ -145,6 +148,9 @@ public sealed class ConfigManager : MonoBehaviour
         config.gameplay.diamondChanceMin = Mathf.Clamp01(config.gameplay.diamondChanceMin);
         config.gameplay.diamondChanceMax = Mathf.Clamp(
             config.gameplay.diamondChanceMax, config.gameplay.diamondChanceMin, 1f);
+        if (config.gameplay.diamondMinGap <= 0)
+            config.gameplay.diamondMinGap = defaults.gameplay.diamondMinGap;
+        config.gameplay.diamondMinGap = Mathf.Clamp(config.gameplay.diamondMinGap, 2, 20);
         config.gameplay.earlyMaxStraightTiles = Mathf.Clamp(config.gameplay.earlyMaxStraightTiles, 3, 10);
         config.gameplay.midMaxStraightTiles = Mathf.Clamp(
             config.gameplay.midMaxStraightTiles, 2, config.gameplay.earlyMaxStraightTiles);
@@ -173,6 +179,33 @@ public sealed class ConfigManager : MonoBehaviour
         config.gameplay.routeBranchLength = Mathf.Clamp(config.gameplay.routeBranchLength, 2, 5);
         config.gameplay.riskRouteGemChance = Mathf.Clamp01(config.gameplay.riskRouteGemChance);
         config.gameplay.riskRouteHazardSpacing = Mathf.Clamp(config.gameplay.riskRouteHazardSpacing, 2, 8);
+        // Firebase can tune this range without a new build. Individual reward
+        // values below are always kept inside the configured economy limits.
+        config.challenges.missionGemRewardMin = Mathf.Clamp(config.challenges.missionGemRewardMin, 1, 50);
+        config.challenges.missionGemRewardMax = Mathf.Clamp(
+            config.challenges.missionGemRewardMax, config.challenges.missionGemRewardMin, 50);
+        int rewardMin = config.challenges.missionGemRewardMin;
+        int rewardMax = config.challenges.missionGemRewardMax;
+        config.challenges.dailyTargetReward = Mathf.Clamp(config.challenges.dailyTargetReward, rewardMin, rewardMax);
+        config.challenges.dailyRunsReward = Mathf.Clamp(config.challenges.dailyRunsReward, rewardMin, rewardMax);
+        config.challenges.dailyGemsReward = Mathf.Clamp(config.challenges.dailyGemsReward, rewardMin, rewardMax);
+        config.challenges.dailyComboReward = Mathf.Clamp(config.challenges.dailyComboReward, rewardMin, rewardMax);
+        config.challenges.dailyScoreReward = Mathf.Clamp(config.challenges.dailyScoreReward, rewardMin, rewardMax);
+        int weeklyReward = Mathf.Clamp(config.challenges.weeklyMissionGemReward, 5, 50);
+        config.challenges.weeklyMissionGemReward = weeklyReward;
+        config.challenges.weeklyRunsReward = weeklyReward;
+        config.challenges.weeklyScoreReward = weeklyReward;
+        config.challenges.weeklyGemsReward = weeklyReward;
+        config.challenges.weeklyComboReward = weeklyReward;
+        config.challenges.weeklyBestReward = weeklyReward;
+        config.challenges.missionScoreReward = Mathf.Clamp(config.challenges.missionScoreReward, rewardMin, rewardMax);
+        config.challenges.missionComboReward = Mathf.Clamp(config.challenges.missionComboReward, rewardMin, rewardMax);
+        config.challenges.missionGemsReward = Mathf.Clamp(config.challenges.missionGemsReward, rewardMin, rewardMax);
+        config.challenges.missionRunsReward = Mathf.Clamp(config.challenges.missionRunsReward, rewardMin, rewardMax);
+        config.challenges.missionTotalScoreReward = Mathf.Clamp(config.challenges.missionTotalScoreReward, rewardMin, rewardMax);
+        config.challenges.achievementScore50Reward = Mathf.Clamp(config.challenges.achievementScore50Reward, rewardMin, rewardMax);
+        config.challenges.achievementCombo10Reward = Mathf.Clamp(config.challenges.achievementCombo10Reward, rewardMin, rewardMax);
+        config.challenges.achievementScore200Reward = Mathf.Clamp(config.challenges.achievementScore200Reward, rewardMin, rewardMax);
         if (config.gameplay.perfectHapticDurationMs < 20)
             config.gameplay.perfectHapticDurationMs = defaults.gameplay.perfectHapticDurationMs;
         if (config.gameplay.perfectHapticAmplitude < 70)

@@ -78,7 +78,7 @@ public sealed class CloudSaveManager : MonoBehaviour
 
     private void InitializeFirebase()
     {
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        FirebaseBootstrap.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCanceled || task.IsFaulted || task.Result != DependencyStatus.Available)
             {

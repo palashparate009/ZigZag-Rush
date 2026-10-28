@@ -64,7 +64,7 @@ public sealed class GameAnalytics : MonoBehaviour
         Debug.Log("Firebase Analytics is disabled in the Unity Editor to keep production reports clean.");
         LogApplicationStarted();
 #else
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        FirebaseBootstrap.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {

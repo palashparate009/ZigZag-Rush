@@ -15,9 +15,9 @@ MonoBehaviour:
   settings:
     targetFrameRate: 60
     maximumDeltaTime: 0.1
-    baseMoveSpeed: 8
-    newPlayerMoveSpeed: 5.5
-    newPlayerSpeedRunCount: 3
+    baseMoveSpeed: 6
+    newPlayerMoveSpeed: 4.5
+    newPlayerSpeedRunCount: 10
     maximumDifficultySpeedMultiplier: 1.75
     perfectTurnWindow: 0.34
     newPlayerPerfectTurnWindow: 0.42
@@ -30,6 +30,7 @@ MonoBehaviour:
     slowMotionMultiplier: 0.72
     specialEffectDuration: 3
     gemMagnetRadius: 9
+    gemMagnetDuration: 5
     mysteryRewardMinInclusive: 3
     mysteryRewardMaxExclusive: 9
     specialTooltipDistance: 16
@@ -51,8 +52,9 @@ MonoBehaviour:
     specialTileChanceMin: 0.06
     specialTileChanceMax: 0.16
     specialTileMinGap: 4
-    diamondChanceMin: 0.12
-    diamondChanceMax: 0.2
+    diamondChanceMin: 0.05
+    diamondChanceMax: 0.1
+    diamondMinGap: 5
     earlyMaxStraightTiles: 5
     midMaxStraightTiles: 4
     lateMaxStraightTiles: 3
@@ -60,7 +62,7 @@ MonoBehaviour:
     lateRoadDifficultyThreshold: 0.7
     movingTileSpeed: 2
     movingTileAmplitude: 0.22
-    crumblingTileDelay: 0.42
+    crumblingTileDelay: 1.5
     crumblingTileExitDelay: 0.03
     normalTileFallDelay: 0.2
     platformRecycleDelay: 1.2
@@ -91,3 +93,10 @@ MonoBehaviour:
       movingColor: {r: 1, g: 0.8, b: 0.1, a: 1}
       mysteryColor: {r: 1, g: 0.15, b: 0.65, a: 1}
       activationTextColor: {r: 0, g: 0, b: 0, a: 1}
+      speedBoostLabel: BOOST
+      slowMotionLabel: SLOW
+      shieldLabel: SHIELD
+      gemMagnetLabel: MAGNET
+      crumblingLabel: CRUMBLE
+      movingLabel: MOVING
+      mysteryLabel: MYSTERY

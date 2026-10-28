@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameConfig", menuName = "ZigZag/Config/Game Config")]
 public sealed class GameConfigAsset : ScriptableObject
 {
-    public int version = 5;
+    public int version = 6;
     public NetworkConfigAsset network;
     public ServiceConfigAsset services;
     public AdsConfigAsset ads;

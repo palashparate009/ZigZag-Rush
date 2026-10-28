@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 [Serializable]
@@ -14,6 +15,7 @@ public sealed class GhostFrame
 public sealed class GhostRunData
 {
     public string date;
+    public int routeVersion;
     public int score;
     public int carIndex;
     public List<GhostFrame> frames = new List<GhostFrame>();
@@ -75,6 +77,7 @@ public sealed class PersonalBestGhost : MonoBehaviour
             GhostRunData data = new GhostRunData
             {
                 date = TodayKey,
+                routeVersion = PlatformSpawner.DailyRouteVersion,
                 score = score,
                 carIndex = GameProgress.SelectedCarIndex,
                 frames = new List<GhostFrame>(recording)
@@ -119,14 +122,11 @@ public sealed class PersonalBestGhost : MonoBehaviour
 
         if (elapsed >= frames[frames.Count - 1].time)
         {
-            // Keep the completed ghost at its final recorded position. A crash may
-            // still be followed by a rewarded revive, so the daily challenge and
-            // its reference ghost remain active until a genuinely new run starts.
-            GhostFrame finalFrame = frames[frames.Count - 1];
-            ghostRoot.SetPositionAndRotation(
-                finalFrame.position + Vector3.up * ConfigManager.Current.ghost.verticalOffset,
-                finalFrame.rotation);
-            if (!ghostRoot.gameObject.activeSelf) ghostRoot.gameObject.SetActive(true);
+            // A ghost ends when its recorded daily run ends. Give it the same
+            // quick "collected" feeling as a gem instead of leaving a frozen
+            // car at its final (often fallen) position.
+            playback = null;
+            PlayCollectedDisappearAnimation();
             return;
         }
 
@@ -209,8 +209,79 @@ public sealed class PersonalBestGhost : MonoBehaviour
 
     private void DestroyGhost()
     {
-        if (ghostRoot != null) Destroy(ghostRoot.gameObject);
+        if (ghostRoot != null)
+        {
+            ghostRoot.DOKill(false);
+            Destroy(ghostRoot.gameObject);
+        }
         ghostRoot = null;
+    }
+
+    private void PlayCollectedDisappearAnimation()
+    {
+        if (ghostRoot == null) return;
+
+        Transform root = ghostRoot;
+        root.DOKill(false);
+
+        const float duration = 0.18f;
+        Sequence sequence = DOTween.Sequence()
+            .SetUpdate(true)
+            .SetTarget(root)
+            .SetLink(root.gameObject);
+
+        // Rise and shrink quickly, like a collected item leaving the track.
+        sequence.Join(root.DOMove(root.position + Vector3.up * 0.42f, duration).SetEase(Ease.OutQuad));
+        sequence.Join(root.DOScale(root.localScale * 0.12f, duration).SetEase(Ease.InBack));
+
+        foreach (Renderer renderer in root.GetComponentsInChildren<Renderer>(true))
+        {
+            foreach (Material material in renderer.materials)
+            {
+                if (material == null) continue;
+
+                // GhostCar uses _Opacity. Keep a color-alpha fallback in case
+                // a future car material does not use the ghost shader.
+                if (material.HasProperty("_Opacity"))
+                {
+                    Material ghostMaterial = material;
+                    sequence.Join(DOTween.To(
+                        () => ghostMaterial.GetFloat("_Opacity"),
+                        value => ghostMaterial.SetFloat("_Opacity", value),
+                        0f,
+                        duration));
+                }
+                else if (material.HasProperty("_Color"))
+                {
+                    Material ghostMaterial = material;
+                    Color transparent = ghostMaterial.GetColor("_Color");
+                    transparent.a = 0f;
+                    sequence.Join(DOTween.To(
+                        () => ghostMaterial.GetColor("_Color"),
+                        value => ghostMaterial.SetColor("_Color", value),
+                        transparent,
+                        duration));
+                }
+            }
+        }
+
+        sequence.OnComplete(() =>
+        {
+            if (root != null) Destroy(root.gameObject);
+            if (ghostRoot == root) ghostRoot = null;
+        });
+    }
+
+    // A revive rebuilds a safety runway rather than continuing the original
+    // seeded route. Stop recording and hide the ghost so neither a saved nor
+    // displayed ghost can appear off-road after that route change.
+    public void StopForRouteChange()
+    {
+        if (!dailyRun) return;
+        dailyRun = false;
+        recording.Clear();
+        playback = null;
+        DestroyGhost();
     }
 
     private static GhostRunData LoadLatestGhost()
@@ -236,7 +307,11 @@ public sealed class PersonalBestGhost : MonoBehaviour
     }
 
     private static bool IsUsableToday(GhostRunData data) =>
-        data != null && data.date == TodayKey && data.frames != null && data.frames.Count >= 2;
+        data != null &&
+        data.date == TodayKey &&
+        data.routeVersion == PlatformSpawner.DailyRouteVersion &&
+        data.frames != null &&
+        data.frames.Count >= 2;
 
     private static bool IsBetterGhost(GhostRunData candidate, GhostRunData current)
     {

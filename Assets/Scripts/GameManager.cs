@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     public bool IsDailyRun { get; private set; }
     public bool HasShield { get; private set; }
     public bool UsesNewPlayerSpeedThisRun { get; private set; }
+    public float RunMoveSpeed { get; private set; }
+    public float RunMaximumDifficultySpeedMultiplier { get; private set; } = 1f;
     public float SpeedMultiplier { get; private set; } = 1f;
     public float Difficulty01 => Mathf.Clamp01(Score / (float)Mathf.Max(1, ConfigManager.Current.gameplay.difficultyScoreCap));
 
@@ -42,6 +44,7 @@ public class GameManager : MonoBehaviour
     private MediatedAdsManager Ads => ads ??= MediatedAdsManager.Create();
     private bool bannerVisibleRequested;
     private Coroutine speedRoutine;
+    private Coroutine magnetRoutine;
     private bool reviveAdInProgress;
     private int savedRunGems;
     private bool doubleGemsClaimed;
@@ -184,15 +187,30 @@ public class GameManager : MonoBehaviour
     {
         if (State == GameState.Playing) return;
 
-        bool resetWorld = State == GameState.GameOver;
+        // The spawner prebuilds a normal random road while the menu is open.
+        // Always reset before a daily run so its very first attempt starts from
+        // the day's deterministic seed instead of that prebuilt road.
+        bool resetWorld = State == GameState.GameOver || dailyChallenge;
         GameplayConfig gameplayConfig = ConfigManager.Current.gameplay;
         int runNumber = GameProgress.RegisterRunStarted(gameplayConfig.newPlayerSpeedRunCount);
         UsesNewPlayerSpeedThisRun = runNumber <= gameplayConfig.newPlayerSpeedRunCount;
+        // Remote Config can finish fetching after the player reaches the menu.
+        // Snapshot speed settings for this whole attempt so a delayed fetch can
+        // never make the car suddenly speed up midway through a run.
+        RunMoveSpeed = UsesNewPlayerSpeedThisRun
+            ? gameplayConfig.newPlayerMoveSpeed
+            : gameplayConfig.baseMoveSpeed;
+        RunMaximumDifficultySpeedMultiplier = gameplayConfig.maximumDifficultySpeedMultiplier;
 
         if (speedRoutine != null)
         {
             StopCoroutine(speedRoutine);
             speedRoutine = null;
+        }
+        if (magnetRoutine != null)
+        {
+            StopCoroutine(magnetRoutine);
+            magnetRoutine = null;
         }
 
         Score = 0;
@@ -309,7 +327,7 @@ public class GameManager : MonoBehaviour
         {
             case SpecialTileType.SpeedBoost:
                 SetTemporarySpeed(config.speedBoostMultiplier, config.specialEffectDuration);
-                runtimeUI.ShowSpecialTileToast("SPEED BOOST!");
+                runtimeUI.ShowSpecialTileToast("SPEED BOOST");
                 break;
             case SpecialTileType.SlowMotion:
                 SetTemporarySpeed(config.slowMotionMultiplier, config.specialEffectDuration);
@@ -320,7 +338,7 @@ public class GameManager : MonoBehaviour
                 runtimeUI.ShowSpecialTileToast("SHIELD READY");
                 break;
             case SpecialTileType.GemMagnet:
-                CollectNearbyDiamonds(origin, config.gemMagnetRadius);
+                StartGemMagnet(config.gemMagnetRadius, config.gemMagnetDuration);
                 runtimeUI.ShowSpecialTileToast("GEM MAGNET");
                 break;
             case SpecialTileType.Mystery:
@@ -352,10 +370,30 @@ public class GameManager : MonoBehaviour
         if (HasShield && car != null)
         {
             HasShield = false;
-            car.Revive();
-            runtimeUI.ShowToast("SHIELD SAVED YOU!");
+            // The rescue road starts directly below the point where the car
+            // fell, rather than at an earlier platform. This avoids a random-
+            // feeling jump backwards while still giving the player solid road.
+            Vector3 respawnPlatformPosition = car.ShieldRespawnPlatformPosition;
+            Vector3 respawnDirection = car.MovementDirection;
+            State = GameState.Reviving;
+            gameStarted = false;
+            personalBestGhost?.StopForRouteChange();
+            if (spawner != null)
+            {
+                spawner.RebuildForRevive(respawnPlatformPosition, respawnDirection);
+            }
+
+            car.ReviveAtPlatform(respawnPlatformPosition, respawnDirection);
             runtimeUI.UpdateHud(Score, RunGems, Combo, HasShield);
-            GameAnalytics.GameplayReward("shield_save", 1);
+            runtimeUI.PlayReviveCountdown(() =>
+            {
+                if (State != GameState.Reviving) return;
+                State = GameState.Playing;
+                gameStarted = true;
+                if (spawner != null) spawner.ResumeSpawning();
+                runtimeUI.ShowToast("SHIELD SAVED YOU");
+                GameAnalytics.GameplayReward("shield_save", 1);
+            });
             return;
         }
 
@@ -401,6 +439,7 @@ public class GameManager : MonoBehaviour
             gameStarted = false;
             if (cameraColourChanger != null) cameraColourChanger.SetGameplayState(Difficulty01, Combo);
             car.Revive(ConfigManager.Current.gameplay.reviveSafetyInset);
+            personalBestGhost?.StopForRouteChange();
             if (spawner != null) spawner.RebuildForRevive(car.LastSafePlatformPosition, car.MovementDirection);
             runtimeUI.ShowHud();
             runtimeUI.UpdateHud(Score, RunGems, Combo, HasShield);
@@ -604,15 +643,41 @@ public class GameManager : MonoBehaviour
         speedRoutine = null;
     }
 
+    private void StartGemMagnet(float radius, float duration)
+    {
+        if (magnetRoutine != null) StopCoroutine(magnetRoutine);
+        magnetRoutine = StartCoroutine(GemMagnetRoutine(
+            Mathf.Max(0.5f, radius),
+            Mathf.Max(0.1f, duration)));
+    }
+
+    private IEnumerator GemMagnetRoutine(float radius, float duration)
+    {
+        float endTime = Time.time + duration;
+        while (State == GameState.Playing && Time.time < endTime)
+        {
+            if (car == null) car = FindFirstObjectByType<CarController>();
+            if (car != null) CollectNearbyDiamonds(car.transform.position, radius);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        magnetRoutine = null;
+    }
+
     private void CollectNearbyDiamonds(Vector3 origin, float radius)
     {
+        if (car == null) car = FindFirstObjectByType<CarController>();
+        if (car == null) return;
+
         int hitCount = Physics.OverlapSphereNonAlloc(origin, radius, nearbyColliders);
         for (int i = 0; i < hitCount; i++)
         {
             Collider hit = nearbyColliders[i];
             if (!hit.CompareTag("Diamond") || !hit.gameObject.activeSelf) continue;
-            hit.gameObject.SetActive(false);
-            CollectGems(1, false);
+
+            GemMagnetPickup gem = hit.GetComponentInParent<GemMagnetPickup>();
+            if (gem == null) gem = hit.gameObject.AddComponent<GemMagnetPickup>();
+            gem.PullTo(car.transform);
         }
     }
 

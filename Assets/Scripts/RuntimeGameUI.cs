@@ -41,6 +41,7 @@ public class RuntimeGameUI : MonoBehaviour
     private GameObject loginPanel;
     private GameObject namePanel;
     private GameObject quitPanel;
+    private GameObject networkPanel;
     private GameObject specialTileFtuePanel;
     private GameObject leaderboardTimeframePanel;
     private GameObject fullScreenBackdrop;
@@ -126,6 +127,9 @@ public class RuntimeGameUI : MonoBehaviour
     private Button quitButton;
     private Button confirmQuitButton;
     private Button cancelQuitButton;
+    private Button networkRetryButton;
+    private Button networkExitButton;
+    private TMP_Text networkMessageText;
     [SerializeField] private Button menuLeaderboardButton;
     [SerializeField] private Button gameOverLeaderboardButton;
     private Button leaderboardDailyButton;
@@ -165,6 +169,8 @@ public class RuntimeGameUI : MonoBehaviour
     private bool specialTileFtuePausedGame;
     private float timeScaleBeforeQuit = 1f;
     private bool quitConfirmationPausedGame;
+    private float timeScaleBeforeNetworkPopup = 1f;
+    private bool networkPopupPausedGame;
     private readonly List<PopupSlot> popupPool = new List<PopupSlot>(PopupPoolSize);
     private int nextPopupIndex;
     private int selectedChallengeTab;
@@ -200,6 +206,8 @@ public class RuntimeGameUI : MonoBehaviour
         manager = gameManager;
         CloudSaveManager.ProgressSynchronized -= HandleCloudProgressSynchronized;
         CloudSaveManager.ProgressSynchronized += HandleCloudProgressSynchronized;
+        NetworkConnectivityMonitor.ConnectivityChanged -= HandleConnectivityChanged;
+        NetworkConnectivityMonitor.ConnectivityChanged += HandleConnectivityChanged;
 
         InitializeLeaderboardReferences();
         if (gameOverView == null && gameOverPanel != null)
@@ -210,10 +218,13 @@ public class RuntimeGameUI : MonoBehaviour
         EnsureFullScreenBackdrop();
         EnsureMenuPlayerName();
         BuildQuitControls();
+        BuildNetworkControls();
         BuildPrivacyControls();
         ApplySafeArea();
         HideAll();
         BindButtons();
+        if (!NetworkConnectivityMonitor.IsConnected) ShowNetworkPopup();
+        NetworkConnectivityMonitor.CheckNow(HandleConnectivityChanged);
         StartCoroutine(CompleteDeferredInitialization());
     }
 
@@ -353,9 +364,11 @@ public class RuntimeGameUI : MonoBehaviour
     private void OnDestroy()
     {
         CloudSaveManager.ProgressSynchronized -= HandleCloudProgressSynchronized;
+        NetworkConnectivityMonitor.ConnectivityChanged -= HandleConnectivityChanged;
         DOTween.Kill(gameObject);
-        RestoreTimeAfterSpecialTileTooltip();
+        RestoreTimeAfterNetworkPopup();
         RestoreTimeAfterQuitConfirmation();
+        RestoreTimeAfterSpecialTileTooltip();
         if (gemStore == null) return;
         gemStore.StoreChanged -= RefreshGemStore;
         gemStore.StoreMessage -= OnStoreMessage;
@@ -382,6 +395,8 @@ public class RuntimeGameUI : MonoBehaviour
 
     private void HandleAndroidBack()
     {
+        if (networkPanel != null && networkPanel.activeSelf) return;
+
         if (leaderboardTimeframePanel != null && leaderboardTimeframePanel.activeSelf)
         {
             CloseLeaderboardChoices();
@@ -538,6 +553,19 @@ public class RuntimeGameUI : MonoBehaviour
         sequence.Join(gemsText.DOColor(gemFlash, .08f));
         sequence.Append(rect.DOScale(gemsBaseScale, .2f).SetEase(Ease.OutCubic));
         sequence.Join(gemsText.DOColor(gemsBaseColor, .2f));
+    }
+
+    public bool TryGetGemHudScreenPosition(out Vector2 screenPosition)
+    {
+        screenPosition = default;
+        if (gemsText == null || !gemsText.gameObject.activeInHierarchy) return false;
+
+        Canvas canvas = gemsText.canvas;
+        Camera uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+            ? canvas.worldCamera
+            : null;
+        screenPosition = RectTransformUtility.WorldToScreenPoint(uiCamera, gemsText.rectTransform.position);
+        return true;
     }
 
     private void AnimateHudBestScore()
@@ -811,6 +839,114 @@ public class RuntimeGameUI : MonoBehaviour
         BindButton(confirmQuitButton, quitPanel.name, QuitGame);
         BindButton(cancelQuitButton, quitPanel.name, CancelQuitConfirmation);
         quitPanel.SetActive(false);
+    }
+
+    private void BuildNetworkControls()
+    {
+        if (networkPanel != null) return;
+        QuitPanelView view = InstantiateRuntimePart<QuitPanelView>("QuitPanel", safeRoot);
+        networkPanel = view.gameObject;
+        networkPanel.name = "Network Connectivity Panel";
+        networkExitButton = view.confirmButton;
+        networkRetryButton = view.cancelButton;
+
+        TMP_Text title = FindText(networkPanel, "Quit Title");
+        networkMessageText = FindText(networkPanel, "Quit Message");
+        TMP_Text exitLabel = networkExitButton.GetComponentInChildren<TMP_Text>(true);
+        TMP_Text retryLabel = networkRetryButton.GetComponentInChildren<TMP_Text>(true);
+        if (title != null) title.text = "NO INTERNET";
+        if (exitLabel != null) exitLabel.text = "EXIT";
+        if (retryLabel != null) retryLabel.text = "RETRY";
+
+        BindButton(networkRetryButton, networkPanel.name, RetryNetworkConnection);
+        BindButton(networkExitButton, networkPanel.name, ExitForNetworkFailure);
+        networkPanel.SetActive(false);
+    }
+
+    private static TMP_Text FindText(GameObject panel, string objectName)
+    {
+        if (panel == null) return null;
+        foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true))
+            if (text.name == objectName) return text;
+        return null;
+    }
+
+    private void HandleConnectivityChanged(bool connected)
+    {
+        if (this == null) return;
+        if (connected) HideNetworkPopup();
+        else ShowNetworkPopup();
+    }
+
+    private void ShowNetworkPopup()
+    {
+        BuildNetworkControls();
+        if (networkPanel == null) return;
+
+        if (!networkPanel.activeSelf)
+        {
+            timeScaleBeforeNetworkPopup = Time.timeScale;
+            networkPopupPausedGame = true;
+            Time.timeScale = 0f;
+            GameAnalytics.ScreenViewed("network_connection_required");
+        }
+
+        if (networkMessageText != null)
+            networkMessageText.text = "CHECK YOUR INTERNET CONNECTION,\nTHEN TAP RETRY.";
+        if (networkRetryButton != null) networkRetryButton.interactable = !NetworkConnectivityMonitor.IsChecking;
+        if (!networkPanel.activeSelf)
+        {
+            networkPanel.SetActive(true);
+            networkPanel.transform.SetAsLastSibling();
+            ShowPanel(networkPanel);
+        }
+        else
+        {
+            networkPanel.transform.SetAsLastSibling();
+            manager.SetBannerVisible(false);
+        }
+    }
+
+    private void RetryNetworkConnection()
+    {
+        if (networkRetryButton != null) networkRetryButton.interactable = false;
+        if (networkMessageText != null) networkMessageText.text = "CHECKING CONNECTION...";
+        NetworkConnectivityMonitor.CheckNow(connected =>
+        {
+            if (this == null) return;
+            if (connected)
+            {
+                HideNetworkPopup();
+                return;
+            }
+
+            if (networkMessageText != null)
+                networkMessageText.text = "STILL OFFLINE. CHECK WI-FI OR MOBILE DATA,\nTHEN RETRY.";
+            if (networkRetryButton != null) networkRetryButton.interactable = true;
+        });
+    }
+
+    private void HideNetworkPopup()
+    {
+        if (networkPanel == null || !networkPanel.activeSelf) return;
+        DOTween.Kill(networkPanel, false);
+        networkPanel.SetActive(false);
+        RestoreTimeAfterNetworkPopup();
+        RefreshBannerForVisibleScreen();
+    }
+
+    private void ExitForNetworkFailure()
+    {
+        GameProgress.Save();
+        RestoreTimeAfterNetworkPopup();
+        Application.Quit();
+    }
+
+    private void RestoreTimeAfterNetworkPopup()
+    {
+        if (!networkPopupPausedGame) return;
+        networkPopupPausedGame = false;
+        Time.timeScale = timeScaleBeforeNetworkPopup;
     }
 
     private void InitializeLeaderboardReferences()
@@ -1640,7 +1776,7 @@ public class RuntimeGameUI : MonoBehaviour
     private IEnumerator ReviveCountdownRoutine(Action ready)
     {
         RectTransform rect = (RectTransform)toastText.transform;
-        string[] steps = { "3", "2", "1", "GO!" };
+        string[] steps = { "3", "2", "1", "GO" };
         Color originalColour = toastText.color;
         toastText.gameObject.SetActive(true);
         toastText.color = gold;
@@ -1676,8 +1812,13 @@ public class RuntimeGameUI : MonoBehaviour
     private void ShowPanel(GameObject panel)
     {
         panel.SetActive(true);
-        SetFullScreenBackdropVisible(panel != hudPanel && panel != specialTileFtuePanel);
-        manager.SetBannerVisible(ShouldShowBanner(panel));
+        bool networkIsBlocking = networkPanel != null &&
+                                 networkPanel.activeSelf &&
+                                 panel != networkPanel;
+        SetFullScreenBackdropVisible(networkIsBlocking ||
+                                     (panel != hudPanel && panel != specialTileFtuePanel));
+        manager.SetBannerVisible(!networkIsBlocking && ShouldShowBanner(panel));
+        if (networkIsBlocking) networkPanel.transform.SetAsLastSibling();
         DOTween.Kill(panel, true);
 
         if (!initialScreenPresented)
@@ -1771,7 +1912,14 @@ public class RuntimeGameUI : MonoBehaviour
         if (specialTileFtuePanel != null) specialTileFtuePanel.SetActive(false);
         if (leaderboardTimeframePanel != null) leaderboardTimeframePanel.SetActive(false);
         if (newBestText != null) newBestText.gameObject.SetActive(false);
-        SetFullScreenBackdropVisible(false);
+        bool networkIsBlocking = networkPanel != null && networkPanel.activeSelf;
+        SetFullScreenBackdropVisible(networkIsBlocking);
+        if (networkIsBlocking)
+        {
+            Time.timeScale = 0f;
+            networkPanel.transform.SetAsLastSibling();
+            manager.SetBannerVisible(false);
+        }
     }
 
     private bool ShouldShowBanner(GameObject panel)
@@ -1795,6 +1943,7 @@ public class RuntimeGameUI : MonoBehaviour
                                               tutorialPanel.activeSelf ||
                                               privacyPanel.activeSelf ||
                                               (quitPanel != null && quitPanel.activeSelf) ||
+                                              (networkPanel != null && networkPanel.activeSelf) ||
                                               deleteAccountPanel.activeSelf;
         bool shouldShow = !gameplayOrBlockingPanelVisible &&
                           (menuPanel.activeSelf ||
@@ -1806,7 +1955,8 @@ public class RuntimeGameUI : MonoBehaviour
         manager.SetBannerVisible(shouldShow);
 
         bool fullScreenPanelVisible = !hudPanel.activeSelf || pausePanel.activeSelf ||
-                                      (quitPanel != null && quitPanel.activeSelf);
+                                      (quitPanel != null && quitPanel.activeSelf) ||
+                                      (networkPanel != null && networkPanel.activeSelf);
         SetFullScreenBackdropVisible(fullScreenPanelVisible);
     }
 

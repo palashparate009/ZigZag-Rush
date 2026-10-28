@@ -18,5 +18,8 @@ MonoBehaviour:
     cacheLifetimeMinutes: 60
     loginTimeoutSeconds: 45
     playerProfileWaitSeconds: 3
+    connectivityCheckIntervalSeconds: 5
+    connectivityProbeTimeoutSeconds: 5
+    connectivityProbeUrl: https://www.gstatic.com/generate_204
     firebaseRemoteConfigEnabled: 1
     firebaseRemoteConfigJsonKey: game_config_json
